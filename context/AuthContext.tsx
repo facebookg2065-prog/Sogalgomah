@@ -36,7 +36,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setUser(null);
     localStorage.removeItem('souq_user');
-    window.location.href = '/';
+    // Using reload instead of window.location.href = '/' 
+    // This ensures correct behavior when hosted in a subdirectory (like GitHub Pages)
+    window.location.reload();
   };
 
   return (

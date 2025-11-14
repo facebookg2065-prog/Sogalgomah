@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Globe, Target, Users } from 'lucide-react';
+import { Building2, Globe, Target, Users, ArrowRight } from 'lucide-react';
 
 export const About: React.FC = () => {
   return (
@@ -22,14 +22,28 @@ export const About: React.FC = () => {
                         <span>إحدى شركات مجموعة بارون</span>
                     </div>
                     <h2 className="text-3xl font-bold mb-4">مجموعة بارون (Baron Group)</h2>
-                    <p className="text-blue-100 leading-relaxed text-lg opacity-90">
+                    <p className="text-blue-100 leading-relaxed text-lg opacity-90 mb-8">
                         يفخر سوق الجمعة بكونه أحد المشاريع الرقمية الرائدة التابعة لـ <span className="font-bold text-white">مجموعة بارون</span>. 
-                        نحن في مجموعة بارون نؤمن بقوة التكنولوجيا في تحسين حياة الناس، ونسعى من خلال استثماراتنا المتنوعة إلى بناء منظومة اقتصادية رقمية متكاملة تخدم المنطقة العربية بأعلى المعايير العالمية.
+                        نحن في مجموعة بارون نؤمن بقوة التكنولوجيا في تحسين حياة الناس. تتوسع محفظتنا الاستثمارية لتشمل قطاعات حيوية مثل التكنولوجيا المالية (FinTech)، العقارات الذكية، وحلول التجارة الرقمية. نسعى لبناء منظومة اقتصادية متكاملة تخدم المنطقة العربية بأعلى المعايير العالمية، مع التركيز على الابتكار المستدام والنمو المشترك.
                     </p>
+                    <div className="flex flex-wrap gap-4">
+                        <a 
+                            href="#" 
+                            className="bg-white text-blue-900 font-bold py-3 px-8 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                            onClick={(e) => { e.preventDefault(); alert('سيتم إطلاق موقع المجموعة قريباً'); }}
+                        >
+                            زيارة الموقع الرسمي
+                            <ArrowRight size={18} className="rtl:rotate-180" />
+                        </a>
+                        <button className="bg-transparent border border-white/30 text-white font-bold py-3 px-6 rounded-lg hover:bg-white/10 transition-colors">
+                            شركاؤنا
+                        </button>
+                    </div>
                 </div>
                 <div className="md:w-1/3 flex justify-center">
-                    <div className="w-32 h-32 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border-4 border-white/20">
-                        <span className="text-4xl font-black">BG</span>
+                    <div className="w-48 h-48 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border-4 border-white/20 shadow-2xl relative group">
+                        <span className="text-6xl font-black tracking-tighter group-hover:scale-110 transition-transform duration-500">BG</span>
+                        <div className="absolute inset-0 border-2 border-white/30 rounded-full animate-ping opacity-20"></div>
                     </div>
                 </div>
             </div>
@@ -40,8 +54,8 @@ export const About: React.FC = () => {
 
         {/* Values Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center hover:translate-y-1 transition-transform">
-                <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center hover:translate-y-1 transition-transform group">
+                <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
                     <Target size={32} />
                 </div>
                 <h3 className="text-xl font-bold mb-3">رؤيتنا</h3>
@@ -50,8 +64,8 @@ export const About: React.FC = () => {
                 </p>
             </div>
 
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center hover:translate-y-1 transition-transform">
-                <div className="w-14 h-14 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center hover:translate-y-1 transition-transform group">
+                <div className="w-16 h-16 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
                     <Globe size={32} />
                 </div>
                 <h3 className="text-xl font-bold mb-3">رسالتنا</h3>
@@ -60,8 +74,8 @@ export const About: React.FC = () => {
                 </p>
             </div>
 
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center hover:translate-y-1 transition-transform">
-                <div className="w-14 h-14 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center hover:translate-y-1 transition-transform group">
+                <div className="w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
                     <Users size={32} />
                 </div>
                 <h3 className="text-xl font-bold mb-3">مجتمعنا</h3>
