@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Souq Al-Juma",
+  "description": "A comprehensive e-commerce and classifieds platform with Gemini Live AI voice assistance.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
