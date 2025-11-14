@@ -6,7 +6,11 @@ import { ALL_PRODUCTS } from '../data/mockData';
 import { AddAdModal } from '../components/AddAdModal';
 
 // Filter ads that "belong" to the logged in user for simulation
-const MY_ADS = ALL_PRODUCTS.filter(p => p.isAd); 
+// Initialize views with random numbers between 100 and 5000 if not already present
+const MY_ADS = ALL_PRODUCTS.filter(p => p.isAd).map(ad => ({
+  ...ad,
+  views: ad.views ?? Math.floor(Math.random() * (5000 - 100 + 1)) + 100
+}));
 
 export const Dashboard: React.FC = () => {
   const { user, logout, loginWithGoogle, isLoading } = useAuth();
