@@ -53,7 +53,7 @@ function App() {
                             وجهتك الأولى للتسوق الإلكتروني والإعلانات المبوبة. نجمع بين البائع والمشتري في بيئة آمنة وموثوقة.
                         </p>
                         <div className="text-xs text-gray-500">
-                            إحدى شركات <span className="text-gray-400 font-bold">مجموعة بارون (PARON GROUP)</span>
+                            إحدى شركات <span className="text-gray-400 font-bold">PARON GROUP</span>
                         </div>
                     </div>
                     <div>

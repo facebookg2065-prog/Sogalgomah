@@ -13,18 +13,18 @@ export const About: React.FC = () => {
           </p>
         </div>
 
-        {/* Baron Group Section */}
+        {/* PARON GROUP Section */}
         <div className="bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl shadow-lg p-8 md:p-12 mb-12 text-white relative overflow-hidden">
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="flex-1">
                     <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-sm font-medium mb-4">
                         <Building2 size={16} />
-                        <span>إحدى شركات مجموعة بارون (PARON GROUP)</span>
+                        <span>إحدى شركات PARON GROUP</span>
                     </div>
-                    <h2 className="text-3xl font-bold mb-4">مجموعة بارون (PARON GROUP)</h2>
+                    <h2 className="text-3xl font-bold mb-4">PARON GROUP</h2>
                     <p className="text-blue-100 leading-relaxed text-lg opacity-90 mb-8">
-                        يفخر سوق الجمعة بكونه أحد المشاريع الرقمية الرائدة التابعة لـ <span className="font-bold text-white">مجموعة بارون (PARON GROUP)</span>. 
-                        نحن في مجموعة بارون نؤمن بقوة التكنولوجيا في تحسين حياة الناس. تتوسع محفظتنا الاستثمارية لتشمل قطاعات حيوية مثل التكنولوجيا المالية (FinTech)، العقارات الذكية، وحلول التجارة الرقمية. نسعى لبناء منظومة اقتصادية متكاملة تخدم المنطقة العربية بأعلى المعايير العالمية، مع التركيز على الابتكار المستدام والنمو المشترك.
+                        يفخر سوق الجمعة بكونه أحد المشاريع الرقمية الرائدة التابعة لـ <span className="font-bold text-white">PARON GROUP</span>. 
+                        نحن في PARON GROUP نؤمن بقوة التكنولوجيا في تحسين حياة الناس. تتوسع محفظتنا الاستثمارية لتشمل قطاعات حيوية مثل التكنولوجيا المالية (FinTech)، العقارات الذكية، وحلول التجارة الرقمية. نسعى لبناء منظومة اقتصادية متكاملة تخدم المنطقة العربية بأعلى المعايير العالمية، مع التركيز على الابتكار المستدام والنمو المشترك.
                     </p>
                     <div className="flex flex-wrap gap-4">
                         <a 
