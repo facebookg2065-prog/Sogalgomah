@@ -225,7 +225,7 @@ export const Dashboard: React.FC = () => {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-500 font-medium">
-                                    {ad.createdAt || '15 مارس 2024'}
+                                    {ad.createdAt || '15 مارس 2026'}
                                 </td>
                                 <td className="px-6 py-4">
                                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200">
