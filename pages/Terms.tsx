@@ -86,7 +86,7 @@ export const Terms: React.FC = () => {
 
                 <div className="border-t pt-8 mt-8">
                     <p className="text-center text-sm text-gray-500">
-                        لأي استفسارات قانونية، يرجى التواصل عبر البريد الإلكتروني: legal@souqaljuma.com
+                        لأي استفسارات قانونية، يرجى التواصل عبر البريد الإلكتروني: appssaits@souqaljuma.com
                     </p>
                 </div>
             </div>
