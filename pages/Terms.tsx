@@ -10,7 +10,7 @@ export const Terms: React.FC = () => {
             <div className="bg-gray-900 text-white p-8 md:p-12 text-center">
                 <ScrollText size={48} className="mx-auto mb-4 opacity-80" />
                 <h1 className="text-3xl md:text-4xl font-bold mb-4">شروط الاستخدام</h1>
-                <p className="text-gray-400">آخر تحديث: مارس 2026</p>
+                <p className="text-gray-400">آخر تحديث: سبتمبر 2026</p>
             </div>
 
             {/* Content */}

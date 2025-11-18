@@ -1,22 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product } from '../types';
-
-interface CartItem extends Product {
-  quantity: number;
-}
-
-interface ShopContextType {
-  cart: CartItem[];
-  wishlist: string[]; // Store Product IDs
-  isCartOpen: boolean;
-  addToCart: (product: Product) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, delta: number) => void;
-  toggleWishlist: (productId: string) => void;
-  setIsCartOpen: (isOpen: boolean) => void;
-  cartTotal: number;
-  cartCount: number;
-}
+import { Product, CartItem, ShopContextType } from '../types';
+import { getAllProductsFromDB, addProductToDB } from '../utils/db';
+import { ALL_PRODUCTS } from '../data/mockData';
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
@@ -24,8 +9,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
 
-  // Load from local storage on mount
+  // Load Cart & Wishlist from LocalStorage
   useEffect(() => {
     const savedCart = localStorage.getItem('souq_cart');
     const savedWishlist = localStorage.getItem('souq_wishlist');
@@ -33,7 +19,25 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (savedWishlist) setWishlist(JSON.parse(savedWishlist));
   }, []);
 
-  // Save to local storage on change
+  // Load Products from DB
+  useEffect(() => {
+    const fetchProducts = async () => {
+        try {
+            const dbProducts = await getAllProductsFromDB();
+            if (dbProducts.length > 0) {
+                setProducts(dbProducts);
+            } else {
+                setProducts(ALL_PRODUCTS); // Fallback to mock
+            }
+        } catch (error) {
+            console.error("Failed to load products", error);
+            setProducts(ALL_PRODUCTS);
+        }
+    };
+    fetchProducts();
+  }, []);
+
+  // Persistence
   useEffect(() => {
     localStorage.setItem('souq_cart', JSON.stringify(cart));
   }, [cart]);
@@ -42,6 +46,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('souq_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
 
+  // Actions
   const addToCart = (product: Product) => {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
@@ -52,7 +57,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return [...prev, { ...product, quantity: 1 }];
     });
-    setIsCartOpen(true); // Auto open cart for better UX
+    setIsCartOpen(true);
   };
 
   const removeFromCart = (productId: string) => {
@@ -77,6 +82,20 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
   };
 
+  const addProduct = async (productData: Omit<Product, 'id' | 'views' | 'createdAt'>) => {
+    const newProduct: Product = {
+        ...productData,
+        id: `prod_${Date.now()}`,
+        views: 0,
+        createdAt: new Date().toISOString().split('T')[0],
+    };
+    
+    // Add to local state
+    setProducts(prev => [newProduct, ...prev]);
+    // Add to DB
+    await addProductToDB(newProduct);
+  };
+
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -91,7 +110,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toggleWishlist,
       setIsCartOpen,
       cartTotal,
-      cartCount
+      cartCount,
+      products,
+      addProduct
     }}>
       {children}
     </ShopContext.Provider>

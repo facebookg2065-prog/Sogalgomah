@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShoppingCart, Menu, User as UserIcon, Bell, X, Home, LogOut, Grid, Heart } from 'lucide-react';
+import { Search, ShoppingCart, Menu, User as UserIcon, X, Home, LogOut, Grid, Heart, Package } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useShop } from '../context/ShopContext';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -10,10 +10,14 @@ export const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const { cartCount, setIsCartOpen, wishlist } = useShop();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleMobileLinkClick = () => {
-    setIsMobileMenuOpen(false);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In a real app, you would navigate to search results
+    console.log('Searching for:', searchQuery);
   };
 
   const isActive = (path: string) => location.pathname === path;
@@ -37,22 +41,24 @@ export const Header: React.FC = () => {
             </Link>
           </div>
 
-          {/* Search Bar - Hidden on mobile */}
-          <div className="hidden md:flex flex-1 max-w-2xl mx-auto relative">
-              <div className="flex w-full bg-gray-100 hover:bg-gray-50 border border-transparent hover:border-primary-200 rounded-2xl overflow-hidden transition-all focus-within:ring-2 focus-within:ring-primary-500/20 focus-within:border-primary-500 focus-within:bg-white">
+          {/* Search Bar - Central */}
+          <div className="hidden md:flex flex-1 max-w-xl mx-auto">
+              <form onSubmit={handleSearch} className="w-full relative group">
                   <input 
                       type="text" 
-                      placeholder="ابحث في آلاف المنتجات..." 
-                      className="flex-1 px-5 py-3 text-gray-800 bg-transparent focus:outline-none placeholder:text-gray-400"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="ابحث عن منتج، علامة تجارية، أو فئة..." 
+                      className="w-full px-5 py-3 pr-12 rounded-2xl bg-gray-100 border-2 border-transparent focus:bg-white focus:border-primary-500 focus:ring-0 transition-all outline-none text-gray-800 placeholder:text-gray-400"
                   />
-                  <button className="px-6 flex items-center justify-center text-gray-500 hover:text-primary-600 transition-colors">
-                      <Search size={22} />
+                  <button type="submit" className="absolute left-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-primary-600 transition-colors">
+                      <Search size={20} />
                   </button>
-              </div>
+              </form>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 lg:gap-4">
+          <div className="flex items-center gap-2 lg:gap-3">
               {/* Wishlist Icon */}
               <button className="hidden lg:flex items-center justify-center p-2.5 rounded-xl hover:bg-gray-100 text-gray-600 transition-colors relative group">
                   <Heart size={24} className={wishlist.length > 0 ? "text-red-500 fill-red-50" : ""} />
@@ -64,12 +70,12 @@ export const Header: React.FC = () => {
               <div className="h-8 w-px bg-gray-200 hidden lg:block mx-1"></div>
 
               {user ? (
-                <Link to="/dashboard" className="flex items-center gap-3 p-1.5 pr-3 rounded-full bg-gray-50 border border-gray-100 hover:border-primary-200 transition-colors">
+                <Link to="/dashboard" className="flex items-center gap-3 p-1.5 pr-3 rounded-full bg-gray-50 border border-gray-100 hover:border-primary-200 transition-colors group">
                   <div className="hidden lg:flex flex-col items-end leading-none">
-                      <span className="text-[10px] text-gray-500 font-medium">مرحباً</span>
-                      <span className="text-xs font-bold text-gray-900">{user.name.split(' ')[0]}</span>
+                      <span className="text-[10px] text-gray-500 font-medium group-hover:text-primary-600">حسابي</span>
+                      <span className="text-xs font-bold text-gray-900 max-w-[80px] truncate">{user.name.split(' ')[0]}</span>
                   </div>
-                  <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full object-cover ring-2 ring-white shadow-sm" />
+                  <img src={user.avatar} alt={user.name} className="w-9 h-9 rounded-full object-cover ring-2 ring-white shadow-sm" />
                 </Link>
               ) : (
                 <Link 
@@ -83,7 +89,7 @@ export const Header: React.FC = () => {
 
               <button 
                 onClick={() => setIsCartOpen(true)}
-                className="flex items-center justify-center p-2.5 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-all shadow-lg shadow-gray-900/20 relative group"
+                className="flex items-center justify-center p-2.5 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-all shadow-lg shadow-gray-900/20 relative group ml-1"
               >
                    <ShoppingCart size={20} />
                    {cartCount > 0 && (
@@ -96,15 +102,15 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Categories Nav Strip */}
-        <div className="border-t border-gray-100">
+        <div className="border-t border-gray-100 bg-white hidden md:block">
             <div className="container mx-auto px-4">
                 <div className="flex items-center gap-8 overflow-x-auto no-scrollbar h-12 text-sm font-medium text-gray-600">
-                    <Link to="/" className={`shrink-0 hover:text-primary-600 transition-colors ${isActive('/') ? 'text-primary-600 font-bold' : ''}`}>الرئيسية</Link>
+                    <Link to="/" className={`shrink-0 hover:text-primary-600 transition-colors border-b-2 ${isActive('/') ? 'text-primary-600 border-primary-600' : 'border-transparent'} h-full flex items-center px-1`}>الرئيسية</Link>
                     {Object.entries(CATEGORIES).map(([key, cat]) => (
                     <Link 
                         key={key} 
                         to={`/category/${key}`} 
-                        className={`shrink-0 flex items-center gap-2 hover:text-primary-600 transition-colors ${isActive(`/category/${key}`) ? 'text-primary-600 font-bold' : ''}`}
+                        className={`shrink-0 flex items-center gap-2 hover:text-primary-600 transition-colors border-b-2 ${isActive(`/category/${key}`) ? 'text-primary-600 border-primary-600' : 'border-transparent'} h-full px-1`}
                     >
                         <span>{cat.name}</span>
                     </Link>
@@ -114,15 +120,18 @@ export const Header: React.FC = () => {
         </div>
       </header>
 
-      {/* Mobile Side Menu Overlay */}
+      {/* Mobile Side Menu */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[60] lg:hidden">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)}></div>
-          <div className="absolute top-0 right-0 h-full w-[280px] bg-white shadow-2xl flex flex-col animate-slide-in-right">
+          <div className="absolute top-0 right-0 h-full w-[300px] bg-white shadow-2xl flex flex-col animate-slide-in-right">
             {/* Header */}
             <div className="p-5 bg-gradient-to-br from-primary-900 to-primary-800 text-white flex items-center justify-between">
-              <h2 className="font-bold text-lg">القائمة</h2>
-              <button onClick={() => setIsMobileMenuOpen(false)} className="p-1 hover:bg-white/10 rounded-lg transition-colors">
+              <div>
+                  <h2 className="font-bold text-xl">القائمة</h2>
+                  <p className="text-xs text-blue-200 opacity-80">سوق الجمعة - نسخة الموبايل</p>
+              </div>
+              <button onClick={() => setIsMobileMenuOpen(false)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
                 <X size={24} />
               </button>
             </div>
@@ -131,36 +140,39 @@ export const Header: React.FC = () => {
             <div className="p-5 border-b border-gray-100 bg-gray-50">
                {user ? (
                  <div className="flex items-center gap-4">
-                   <img src={user.avatar} alt={user.name} className="w-14 h-14 rounded-full border-4 border-white shadow-sm" />
-                   <div>
-                     <p className="font-bold text-gray-900 text-lg">{user.name}</p>
-                     <p className="text-xs text-gray-500">{user.email}</p>
+                   <img src={user.avatar} alt={user.name} className="w-14 h-14 rounded-full border-4 border-white shadow-sm object-cover" />
+                   <div className="overflow-hidden">
+                     <p className="font-bold text-gray-900 text-lg truncate">{user.name}</p>
+                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                    </div>
                  </div>
                ) : (
-                 <Link to="/login" onClick={handleMobileLinkClick} className="w-full bg-primary-600 text-white py-3 rounded-xl font-bold text-center block shadow-lg shadow-primary-500/30">
-                   تسجيل الدخول
+                 <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="w-full bg-primary-600 text-white py-3 rounded-xl font-bold text-center block shadow-lg shadow-primary-500/30">
+                   تسجيل الدخول / إنشاء حساب
                  </Link>
                )}
             </div>
 
             {/* Navigation */}
             <div className="flex-1 overflow-y-auto p-4 space-y-1">
-               <Link to="/" onClick={handleMobileLinkClick} className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+               <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
                   <Home size={20} className="text-gray-400" />
                   <span className="font-medium">الرئيسية</span>
                </Link>
                
-               <div className="pt-4 pb-2 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider">الأقسام</div>
+               <div className="pt-4 pb-2 px-4 text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                   <Grid size={14} />
+                   تصفح الأقسام
+               </div>
                
                {Object.entries(CATEGORIES).map(([key, cat]) => (
                   <Link 
                     key={key} 
                     to={`/category/${key}`} 
-                    onClick={handleMobileLinkClick}
+                    onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-primary-50 hover:text-primary-700 rounded-xl transition-colors"
                   >
-                    <cat.icon size={20} className="opacity-70" />
+                    <div className="w-6 flex justify-center opacity-70"><cat.icon size={18} /></div>
                     <span>{cat.name}</span>
                   </Link>
                ))}
@@ -168,29 +180,27 @@ export const Header: React.FC = () => {
                {user && (
                  <>
                    <div className="h-px bg-gray-100 my-3"></div>
-                   <Link to="/dashboard" onClick={handleMobileLinkClick} className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-xl transition-colors">
-                      <Grid size={20} className="text-purple-500" />
-                      <span className="font-medium">لوحة التحكم</span>
+                   <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-xl transition-colors font-medium">
+                      <Package size={20} className="text-purple-500" />
+                      <span>لوحة تحكم البائع</span>
                    </Link>
                  </>
                )}
             </div>
 
             {/* Footer Actions */}
-            <div className="p-4 border-t border-gray-100">
+            <div className="p-4 border-t border-gray-100 bg-gray-50">
               {user && (
                  <button 
-                   onClick={() => { logout(); handleMobileLinkClick(); }}
-                   className="flex items-center justify-center gap-2 w-full text-red-600 font-bold py-3 bg-red-50 hover:bg-red-100 rounded-xl transition-colors"
+                   onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                   className="flex items-center justify-center gap-2 w-full text-red-600 font-bold py-3 bg-white border border-gray-200 hover:bg-red-50 hover:border-red-200 rounded-xl transition-colors shadow-sm"
                  >
                    <LogOut size={18} />
                    تسجيل الخروج
                  </button>
               )}
-              <div className="text-center text-xs text-gray-400 mt-4 flex items-center justify-center gap-2">
-                 <span>v2026.1</span>
-                 <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                 <span>PARON GROUP</span>
+              <div className="text-center text-[10px] text-gray-400 mt-4">
+                 v2.0.0 • PARON GROUP © 2026
               </div>
             </div>
           </div>

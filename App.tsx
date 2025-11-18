@@ -97,7 +97,7 @@ function App() {
                     <p className="text-sm">&copy; 2026 سوق الجمعة. جميع الحقوق محفوظة.</p>
                     <div className="flex items-center gap-4 text-xs text-gray-500">
                         <span>PARON GROUP © 2026</span>
-                        <span className="bg-green-900 text-green-300 px-2 py-1 rounded border border-green-800">v2026.Final</span>
+                        <span className="bg-green-900 text-green-300 px-2 py-1 rounded border border-green-800">v2026.2</span>
                     </div>
                 </div>
             </div>

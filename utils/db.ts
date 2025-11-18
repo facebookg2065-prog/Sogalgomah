@@ -1,46 +1,88 @@
-import { openDB } from 'idb';
-import { User } from '../types';
+import { openDB, DBSchema } from 'idb';
+import { User, Product } from '../types';
+import { ALL_PRODUCTS } from '../data/mockData';
 
-const DB_NAME = 'souq-al-juma-db';
+interface SouqDB extends DBSchema {
+  users: {
+    key: string;
+    value: User;
+    indexes: { 'by-email': string };
+  };
+  products: {
+    key: string;
+    value: Product;
+    indexes: { 'by-category': string; 'by-seller': string };
+  };
+}
+
+const DB_NAME = 'souq-al-juma-v2';
 const DB_VERSION = 1;
 
 export const initDB = async () => {
-  return openDB(DB_NAME, DB_VERSION, {
+  const db = await openDB<SouqDB>(DB_NAME, DB_VERSION, {
     upgrade(db) {
+      // Users Store
       if (!db.objectStoreNames.contains('users')) {
-        db.createObjectStore('users', { keyPath: 'email' });
+        const userStore = db.createObjectStore('users', { keyPath: 'id' });
+        userStore.createIndex('by-email', 'email', { unique: true });
+      }
+      
+      // Products Store
+      if (!db.objectStoreNames.contains('products')) {
+        const productStore = db.createObjectStore('products', { keyPath: 'id' });
+        productStore.createIndex('by-category', 'category');
+        productStore.createIndex('by-seller', 'sellerId');
+        
+        // Seed initial data
+        ALL_PRODUCTS.forEach(product => {
+            productStore.put(product);
+        });
       }
     },
   });
+  return db;
 };
 
-export const registerUserInDB = async (user: User & { password?: string }) => {
+// --- User Operations ---
+
+export const registerUserInDB = async (user: User) => {
   const db = await initDB();
-  const existingUser = await db.get('users', user.email);
-  if (existingUser) {
-    throw new Error('البريد الإلكتروني مسجل مسبقاً');
-  }
-  await db.put('users', user);
+  const existingUser = await db.getFromIndex('users', 'by-email', user.email);
+  if (existingUser) throw new Error('البريد الإلكتروني مسجل مسبقاً');
   
-  // Return user without password
-  const { password: _, ...userWithoutPassword } = user;
-  return userWithoutPassword as User;
+  await db.put('users', user);
+  return user;
 };
 
 export const loginUserInDB = async (email: string, password?: string) => {
   const db = await initDB();
-  const user = await db.get('users', email);
+  const user = await db.getFromIndex('users', 'by-email', email);
   
-  if (!user) {
-    throw new Error('البريد الإلكتروني غير مسجل');
-  }
+  if (!user) throw new Error('البريد الإلكتروني غير مسجل');
+  if (password && user.password !== password) throw new Error('كلمة المرور غير صحيحة');
   
-  // In a real app, we would hash passwords. 
-  // For this local demo, we compare plain text or handle Google auth mock.
-  if (password && user.password !== password) {
-     throw new Error('كلمة المرور غير صحيحة');
-  }
-  
-  const { password: _, ...userWithoutPassword } = user;
-  return userWithoutPassword as User;
+  return user;
+};
+
+// --- Product Operations ---
+
+export const getAllProductsFromDB = async () => {
+    const db = await initDB();
+    return db.getAll('products');
+};
+
+export const getProductsByCategory = async (category: string) => {
+    const db = await initDB();
+    return db.getAllFromIndex('products', 'by-category', category);
+};
+
+export const addProductToDB = async (product: Product) => {
+    const db = await initDB();
+    await db.put('products', product);
+    return product;
+};
+
+export const deleteProductFromDB = async (id: string) => {
+    const db = await initDB();
+    await db.delete('products', id);
 };
