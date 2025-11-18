@@ -2,10 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Styles previously in HTML */
 body {
   font-family: 'Tajawal', sans-serif;
   -webkit-font-smoothing: antialiased;
+  @apply bg-gray-50 text-gray-900;
 }
 
 /* Hide scrollbar for horizontal scrolling areas but keep functionality */
@@ -15,4 +15,28 @@ body {
 .no-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+}
+
+/* Glassmorphism Utilities */
+.glass {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20;
+}
+
+.glass-dark {
+    @apply bg-gray-900/80 backdrop-blur-lg border border-gray-700/30;
+}
+
+/* Custom Scrollbar for the whole page */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+::-webkit-scrollbar-thumb {
+  background: #c7c7c7; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8; 
 }
