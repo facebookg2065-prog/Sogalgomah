@@ -38,7 +38,7 @@ function App() {
                             وجهتك الأولى للتسوق الإلكتروني والإعلانات المبوبة. نجمع بين البائع والمشتري في بيئة آمنة وموثوقة.
                         </p>
                         <div className="text-xs text-gray-500">
-                            إحدى شركات <span className="text-gray-400 font-bold">مجموعة بارون</span>
+                            إحدى شركات <span className="text-gray-400 font-bold">مجموعة بارون (PARON GROUP)</span>
                         </div>
                     </div>
                     <div>
@@ -71,8 +71,8 @@ function App() {
                     </div>
                 </div>
                 <div className="border-t border-gray-700 mt-10 pt-6 text-center text-sm flex flex-col md:flex-row items-center justify-between">
-                    <span>&copy; {new Date().getFullYear()} سوق الجمعة. جميع الحقوق محفوظة.</span>
-                    <span className="mt-2 md:mt-0 text-gray-500 text-xs">Baron Group © 2024</span>
+                    <span>&copy; 2026 سوق الجمعة. جميع الحقوق محفوظة.</span>
+                    <span className="mt-2 md:mt-0 text-gray-500 text-xs">PARON GROUP © 2026</span>
                 </div>
             </div>
         </footer>

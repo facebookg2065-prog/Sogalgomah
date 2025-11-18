@@ -19,11 +19,11 @@ export const About: React.FC = () => {
                 <div className="flex-1">
                     <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-sm font-medium mb-4">
                         <Building2 size={16} />
-                        <span>إحدى شركات مجموعة بارون</span>
+                        <span>إحدى شركات مجموعة بارون (PARON GROUP)</span>
                     </div>
-                    <h2 className="text-3xl font-bold mb-4">مجموعة بارون (Baron Group)</h2>
+                    <h2 className="text-3xl font-bold mb-4">مجموعة بارون (PARON GROUP)</h2>
                     <p className="text-blue-100 leading-relaxed text-lg opacity-90 mb-8">
-                        يفخر سوق الجمعة بكونه أحد المشاريع الرقمية الرائدة التابعة لـ <span className="font-bold text-white">مجموعة بارون</span>. 
+                        يفخر سوق الجمعة بكونه أحد المشاريع الرقمية الرائدة التابعة لـ <span className="font-bold text-white">مجموعة بارون (PARON GROUP)</span>. 
                         نحن في مجموعة بارون نؤمن بقوة التكنولوجيا في تحسين حياة الناس. تتوسع محفظتنا الاستثمارية لتشمل قطاعات حيوية مثل التكنولوجيا المالية (FinTech)، العقارات الذكية، وحلول التجارة الرقمية. نسعى لبناء منظومة اقتصادية متكاملة تخدم المنطقة العربية بأعلى المعايير العالمية، مع التركيز على الابتكار المستدام والنمو المشترك.
                     </p>
                     <div className="flex flex-wrap gap-4">
@@ -42,7 +42,7 @@ export const About: React.FC = () => {
                 </div>
                 <div className="md:w-1/3 flex justify-center">
                     <div className="w-48 h-48 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border-4 border-white/20 shadow-2xl relative group">
-                        <span className="text-6xl font-black tracking-tighter group-hover:scale-110 transition-transform duration-500">BG</span>
+                        <span className="text-6xl font-black tracking-tighter group-hover:scale-110 transition-transform duration-500">PG</span>
                         <div className="absolute inset-0 border-2 border-white/30 rounded-full animate-ping opacity-20"></div>
                     </div>
                 </div>
