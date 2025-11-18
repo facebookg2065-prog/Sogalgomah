@@ -4,17 +4,18 @@ import { Ghost, Home } from 'lucide-react';
 
 export const NotFound: React.FC = () => {
   return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center p-4 text-center">
-      <div className="bg-gray-100 p-6 rounded-full mb-6 animate-bounce">
-        <Ghost size={64} className="text-gray-400" />
+    <div className="min-h-[70vh] flex flex-col items-center justify-center p-4 text-center">
+      <div className="bg-blue-50 p-8 rounded-full mb-8 animate-bounce shadow-sm">
+        <Ghost size={80} className="text-blue-500" />
       </div>
-      <h1 className="text-3xl font-black text-gray-900 mb-4">عذراً، الصفحة غير موجودة</h1>
+      <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">404</h1>
+      <h2 className="text-xl md:text-2xl font-bold text-gray-700 mb-4">عذراً، هذه الصفحة غير متوفرة</h2>
       <p className="text-gray-500 max-w-md mb-8 leading-relaxed">
-        يبدو أن الرابط الذي تحاول الوصول إليه غير صحيح، أو تم حذف الصفحة، أو أنك تحاول الوصول إلى مسار غير موجود.
+        يبدو أنك وصلت إلى طريق مسدود. الصفحة التي تبحث عنها قد تكون حُذفت أو أن الرابط غير صحيح.
       </p>
       <Link 
         to="/" 
-        className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all hover:shadow-lg hover:shadow-blue-500/20"
+        className="flex items-center gap-2 bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-500/30"
       >
         <Home size={20} />
         العودة للرئيسية
