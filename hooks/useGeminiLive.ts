@@ -111,8 +111,7 @@ export const useGeminiLive = () => {
               const inputData = audioProcessingEvent.inputBuffer.getChannelData(0);
               const pcmBlob = createBlob(inputData);
               
-              // CRITICAL: Solely rely on sessionPromise resolves and then call `session.sendRealtimeInput`, 
-              // **do not** add other condition checks.
+              // Send data to session once resolved
               sessionPromise.then((session: any) => {
                  session.sendRealtimeInput({ media: pcmBlob });
               });
@@ -122,13 +121,14 @@ export const useGeminiLive = () => {
             scriptProcessor.connect(inputAudioContextRef.current.destination);
           },
           onmessage: async (message: LiveServerMessage) => {
+             // Handle Audio
              const base64Audio = message.serverContent?.modelTurn?.parts[0]?.inlineData?.data;
              
              if (base64Audio && outputAudioContextRef.current && outputNodeRef.current) {
                 setIsSpeaking(true);
                 const ctx = outputAudioContextRef.current;
                 
-                // Sync timing
+                // Sync timing to avoid overlap
                 nextStartTimeRef.current = Math.max(nextStartTimeRef.current, ctx.currentTime);
 
                 const audioBuffer = await decodeAudioData(
@@ -154,6 +154,7 @@ export const useGeminiLive = () => {
                 sourcesRef.current.add(source);
              }
              
+             // Handle Interruption
              const interrupted = message.serverContent?.interrupted;
              if (interrupted) {
                 sourcesRef.current.forEach(s => s.stop());
@@ -177,7 +178,7 @@ export const useGeminiLive = () => {
             speechConfig: {
                 voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } }
             },
-            systemInstruction: "You are a helpful assistant for 'Souq Al-Juma', an online marketplace in the Middle East. You speak Arabic and English. Help users find products, understand categories, and navigate the site. Be brief and friendly."
+            systemInstruction: "You are a helpful assistant for 'Souq Al-Juma', an online marketplace. You speak Arabic and English. Help users find products, understand categories, and navigate the site. Be brief and friendly."
         }
       });
       
