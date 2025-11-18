@@ -2,11 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { GoogleGenAI, LiveServerMessage, Modality } from '@google/genai';
 import { createBlob, decodeAudioData, decodeBase64ToUint8Array } from '../utils/audioUtils';
 
-interface UseGeminiLiveProps {
-  apiKey: string | undefined;
-}
-
-export const useGeminiLive = ({ apiKey }: UseGeminiLiveProps) => {
+export const useGeminiLive = () => {
   const [isActive, setIsActive] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,6 +66,7 @@ export const useGeminiLive = ({ apiKey }: UseGeminiLiveProps) => {
   }, []);
 
   const start = useCallback(async () => {
+    const apiKey = process.env.API_KEY;
     if (!apiKey) {
       setError("API Key is missing");
       return;
@@ -93,10 +90,10 @@ export const useGeminiLive = ({ apiKey }: UseGeminiLiveProps) => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStreamRef.current = stream;
 
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
       // Connect to Live API
-      sessionPromiseRef.current = ai.live.connect({
+      const sessionPromise = ai.live.connect({
         model: 'gemini-2.5-flash-native-audio-preview-09-2025',
         callbacks: {
           onopen: () => {
@@ -111,15 +108,14 @@ export const useGeminiLive = ({ apiKey }: UseGeminiLiveProps) => {
             scriptProcessorRef.current = scriptProcessor;
 
             scriptProcessor.onaudioprocess = (audioProcessingEvent) => {
-              if (!isActive) return; // Guard
               const inputData = audioProcessingEvent.inputBuffer.getChannelData(0);
               const pcmBlob = createBlob(inputData);
               
-              if (sessionPromiseRef.current) {
-                sessionPromiseRef.current.then((session: any) => {
-                   session.sendRealtimeInput({ media: pcmBlob });
-                });
-              }
+              // CRITICAL: Solely rely on sessionPromise resolves and then call `session.sendRealtimeInput`, 
+              // **do not** add other condition checks.
+              sessionPromise.then((session: any) => {
+                 session.sendRealtimeInput({ media: pcmBlob });
+              });
             };
 
             source.connect(scriptProcessor);
@@ -184,13 +180,15 @@ export const useGeminiLive = ({ apiKey }: UseGeminiLiveProps) => {
             systemInstruction: "You are a helpful assistant for 'Souq Al-Juma', an online marketplace in the Middle East. You speak Arabic and English. Help users find products, understand categories, and navigate the site. Be brief and friendly."
         }
       });
+      
+      sessionPromiseRef.current = sessionPromise;
 
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to start audio session");
       stop();
     }
-  }, [apiKey, isActive, stop]);
+  }, [isActive, stop]);
 
   return {
     isActive,

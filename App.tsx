@@ -9,6 +9,7 @@ import { Terms } from './pages/Terms';
 import { Privacy } from './pages/Privacy';
 import { CategoryPage } from './pages/CategoryPage';
 import { ProductDetails } from './pages/ProductDetails';
+import { NotFound } from './pages/NotFound';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/category/:categoryId" element={<CategoryPage />} />
             <Route path="/product/:productId" element={<ProductDetails />} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
 
         <footer className="bg-gray-800 text-gray-300 py-12 mt-auto">

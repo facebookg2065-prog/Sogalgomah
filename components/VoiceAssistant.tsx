@@ -3,8 +3,7 @@ import { Mic, MicOff, X, MessageCircle, Volume2, Loader2 } from 'lucide-react';
 import { useGeminiLive } from '../hooks/useGeminiLive';
 
 export const VoiceAssistant: React.FC = () => {
-  const apiKey = process.env.API_KEY;
-  const { isActive, isSpeaking, error, start, stop } = useGeminiLive({ apiKey });
+  const { isActive, isSpeaking, error, start, stop } = useGeminiLive();
   const [isOpen, setIsOpen] = useState(false);
   const [hasKey, setHasKey] = useState(false);
 
