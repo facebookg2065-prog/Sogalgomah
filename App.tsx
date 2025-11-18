@@ -1,16 +1,27 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { Header } from './components/Header';
 import { VoiceAssistant } from './components/VoiceAssistant';
-import { HomePage } from './pages/HomePage';
-import { Dashboard } from './pages/Dashboard';
-import { About } from './pages/About';
-import { Terms } from './pages/Terms';
-import { Privacy } from './pages/Privacy';
-import { CategoryPage } from './pages/CategoryPage';
-import { ProductDetails } from './pages/ProductDetails';
-import { NotFound } from './pages/NotFound';
 import { AuthProvider } from './context/AuthContext';
+import { Loader2 } from 'lucide-react';
+
+// Lazy Load Pages for better performance
+const HomePage = React.lazy(() => import('./pages/HomePage').then(module => ({ default: module.HomePage })));
+const Dashboard = React.lazy(() => import('./pages/Dashboard').then(module => ({ default: module.Dashboard })));
+const About = React.lazy(() => import('./pages/About').then(module => ({ default: module.About })));
+const Terms = React.lazy(() => import('./pages/Terms').then(module => ({ default: module.Terms })));
+const Privacy = React.lazy(() => import('./pages/Privacy').then(module => ({ default: module.Privacy })));
+const CategoryPage = React.lazy(() => import('./pages/CategoryPage').then(module => ({ default: module.CategoryPage })));
+const ProductDetails = React.lazy(() => import('./pages/ProductDetails').then(module => ({ default: module.ProductDetails })));
+const NotFound = React.lazy(() => import('./pages/NotFound').then(module => ({ default: module.NotFound })));
+const Login = React.lazy(() => import('./pages/Login').then(module => ({ default: module.Login })));
+const Register = React.lazy(() => import('./pages/Register').then(module => ({ default: module.Register })));
+
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
+  </div>
+);
 
 function App() {
   return (
@@ -18,16 +29,20 @@ function App() {
         <div className="min-h-screen flex flex-col font-sans">
         <Header />
         
-        <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/category/:categoryId" element={<CategoryPage />} />
-            <Route path="/product/:productId" element={<ProductDetails />} />
-            <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/category/:categoryId" element={<CategoryPage />} />
+              <Route path="/product/:productId" element={<ProductDetails />} />
+              <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
 
         <footer className="bg-gray-800 text-gray-300 py-12 mt-auto">
             <div className="container mx-auto px-4">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { BarChart3, Eye, Package, TrendingUp, LogOut, PlusCircle, ShoppingBag, ShieldCheck, Zap, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ALL_PRODUCTS } from '../data/mockData';
 import { AddAdModal } from '../components/AddAdModal';
 
@@ -13,11 +13,13 @@ const MY_ADS = ALL_PRODUCTS.filter(p => p.isAd).map(ad => ({
 }));
 
 export const Dashboard: React.FC = () => {
-  const { user, logout, loginWithGoogle, isLoading } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // Not Logged In View - Professional Seller Landing Page
+  // Not Logged In - Redirect or Show Landing
   if (!user) {
+    // If user accesses /dashboard directly without login, show landing
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
             {/* Hero / Welcome */}
@@ -37,20 +39,14 @@ export const Dashboard: React.FC = () => {
                     </p>
                     
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <button 
-                            onClick={loginWithGoogle}
-                            disabled={isLoading}
+                        <Link 
+                            to="/login"
                             className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-4 px-8 rounded-xl transition-all transform hover:scale-105 shadow-xl hover:shadow-blue-600/30 flex items-center justify-center gap-3"
                         >
-                            {isLoading ? "جاري التحميل..." : (
-                                <>
-                                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="G" className="w-6 h-6 bg-white rounded-full p-0.5" />
-                                    تسجيل الدخول بحساب جوجل
-                                </>
-                            )}
-                        </button>
-                        <Link to="/" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-bold py-4 px-8 rounded-xl backdrop-blur border border-white/20 transition">
-                            تصفح الموقع كزائر
+                            تسجيل الدخول
+                        </Link>
+                        <Link to="/register" className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-bold py-4 px-8 rounded-xl backdrop-blur border border-white/20 transition">
+                            إنشاء حساب جديد
                         </Link>
                     </div>
                 </div>
@@ -103,7 +99,7 @@ export const Dashboard: React.FC = () => {
       <div className="bg-white border-b border-gray-200 pt-8 pb-6 px-4 shadow-sm">
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-5 w-full md:w-auto">
-            <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-blue-500 p-0.5">
+            <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-blue-500 p-0.5 bg-white">
                 <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-full" />
             </div>
             <div>
@@ -188,8 +184,9 @@ export const Dashboard: React.FC = () => {
                     عرض الكل <ChevronRight size={14} />
                 </button>
             </div>
-            <div className="overflow-x-auto">
-                <table className="w-full text-right">
+            
+            <div className="overflow-x-auto w-full">
+                <table className="w-full text-right min-w-[800px]">
                     <thead className="bg-gray-50 text-gray-500 text-xs uppercase font-medium border-b border-gray-100">
                         <tr>
                             <th className="px-6 py-4">الإعلان</th>

@@ -4,6 +4,7 @@ export interface User {
   email: string;
   avatar: string;
   role: 'seller' | 'buyer' | 'admin';
+  password?: string; // Optional for Google Auth users, required for Email auth
 }
 
 export interface Product {
@@ -46,5 +47,7 @@ export interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   loginWithGoogle: () => Promise<void>;
+  loginWithEmail: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
