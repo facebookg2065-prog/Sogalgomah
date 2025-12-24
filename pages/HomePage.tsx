@@ -1,118 +1,156 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { ProductCard } from '../components/ProductCard';
-import { LayoutGrid, Sparkles, ArrowRight, Truck, ShieldCheck, Headphones, Tag } from 'lucide-react';
+import { LayoutGrid, Sparkles, ArrowRight, Truck, ShieldCheck, Headphones, Tag, Wand2, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { CATEGORIES } from '../data/mockData';
 import { useShop } from '../context/ShopContext';
+import { GoogleGenAI } from "@google/genai";
 
 export const HomePage: React.FC = () => {
   const { products } = useShop();
+  const [generatedImg, setGeneratedImg] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   
-  // Derived lists
   const featuredProducts = products.filter(p => p.isAd || p.price > 2000).slice(0, 4);
   const newArrivals = products.filter(p => p.isNew || p.category === 'fashion').slice(0, 8);
 
+  const handleAIDemo = async () => {
+    setIsGenerating(true);
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+          parts: [{ text: 'A professional high-quality product photography of a futuristic luxury watch on a dark marble surface, studio lighting, 8k resolution' }],
+        },
+      });
+      
+      for (const part of response.candidates?.[0].content.parts || []) {
+        if (part.inlineData) {
+          setGeneratedImg(`data:image/png;base64,${part.inlineData.data}`);
+          break;
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <main className="flex-grow">
-      {/* Hero Section */}
-      <section className="relative bg-gray-900 min-h-[500px] lg:h-[600px] flex items-center overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-900/95 via-primary-900/80 to-transparent"></div>
+      {/* Hero Section - Redesigned for Professionalism */}
+      <section className="relative bg-[#0a0a0b] min-h-[600px] flex items-center overflow-hidden">
+          {/* Dynamic Background */}
+          <div className="absolute inset-0 opacity-40">
+             <img 
+                src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2000" 
+                className="w-full h-full object-cover scale-105 animate-pulse-slow"
+                alt="Marketplace Hero"
+             />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0b] via-[#0a0a0b]/60 to-transparent lg:bg-gradient-to-r"></div>
           
-          <div className="container mx-auto px-4 relative z-10 pt-10">
-              <div className="max-w-2xl animate-fade-in-up">
-                  <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/10 rounded-full px-4 py-1.5 text-secondary-400 text-xs font-bold mb-6 uppercase tracking-wider">
-                      <Sparkles size={14} />
-                      <span>عروض موسم 2026 بدأت الآن</span>
+          <div className="container mx-auto px-4 relative z-10">
+              <div className="max-w-3xl space-y-8 animate-fade-in-up">
+                  <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-2 text-secondary-400 text-sm font-bold shadow-2xl">
+                      <Sparkles size={18} className="animate-spin-slow" />
+                      <span className="tracking-wide">نقلة نوعية في عالم التسوق الرقمي 2026</span>
                   </div>
-                  <h1 className="text-5xl lg:text-7xl font-black text-white leading-[1.1] mb-6">
-                      كل ما تحتاجه <br/>
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-400 to-orange-500">في مكان واحد.</span>
+                  
+                  <h1 className="text-5xl lg:text-8xl font-black text-white leading-[1] tracking-tight">
+                      سوق الجمعة <br/>
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-blue-400 to-primary-600">
+                         عالمك المتكامل.
+                      </span>
                   </h1>
-                  <p className="text-gray-300 text-lg leading-relaxed mb-8 max-w-lg">
-                      سوق الجمعة يجمع لك أفضل البائعين والمنتجات بأسعار لا تقبل المنافسة. تسوق بأمان، سهولة، وذكاء.
+                  
+                  <p className="text-gray-400 text-xl leading-relaxed max-w-xl font-medium">
+                      اكتشف آلاف المنتجات المميزة بأسعار تنافسية. بيع واشترِ بذكاء مع أول منصة تدعم المساعد الصوتي المباشر.
                   </p>
-                  <div className="flex flex-wrap gap-4">
-                      <Link to="/category/deals" className="bg-secondary-500 hover:bg-secondary-600 text-white font-bold py-4 px-8 rounded-xl shadow-lg shadow-secondary-500/20 transition-transform transform hover:-translate-y-1 flex items-center gap-2">
-                          تصفح العروض
-                          <ArrowRight size={18} className="rtl:rotate-180" />
+                  
+                  <div className="flex flex-wrap gap-5">
+                      <Link to="/category/electronics" className="bg-primary-600 hover:bg-primary-700 text-white font-black py-5 px-10 rounded-2xl shadow-2xl shadow-primary-500/30 transition-all transform hover:-translate-y-1 flex items-center gap-3 text-lg">
+                          ابدأ التسوق
+                          <ArrowRight size={22} className="rtl:rotate-180" />
                       </Link>
-                      <Link to="/category/electronics" className="bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 text-white font-bold py-4 px-8 rounded-xl transition-colors">
-                          الأكثر مبيعاً
-                      </Link>
+                      <button onClick={handleAIDemo} className="bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/20 text-white font-bold py-5 px-10 rounded-2xl transition-all flex items-center gap-3 border-dashed">
+                          {isGenerating ? 'جاري التوليد...' : 'جرب ميزة الذكاء الاصطناعي'}
+                          <Wand2 size={20} className="text-secondary-400" />
+                      </button>
                   </div>
               </div>
           </div>
+          
+          {/* AI Generated Preview Tag */}
+          {generatedImg && (
+            <div className="absolute bottom-10 left-10 hidden lg:block animate-fade-in">
+                <div className="bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/20 shadow-2xl rotate-3">
+                    <img src={generatedImg} className="w-48 h-48 object-cover rounded-xl" alt="AI Generated" />
+                    <p className="text-[10px] text-white/60 mt-2 text-center">صورة مولدة بذكاء Gemini</p>
+                </div>
+            </div>
+          )}
       </section>
 
-      {/* Features Bar */}
-      <section className="bg-white border-b border-gray-100 py-8">
+      {/* Stats Section */}
+      <section className="bg-white py-12 border-b border-gray-100">
           <div className="container mx-auto px-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-blue-50 transition-colors group">
-                      <div className="w-12 h-12 bg-white text-blue-600 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                          <Truck size={24} />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                  {[
+                      { label: 'مستخدم نشط', val: '+500K' },
+                      { label: 'منتج معروض', val: '+2M' },
+                      { label: 'عملية ناجحة', val: '+100K' },
+                      { label: 'تقييم إيجابي', val: '4.9/5' }
+                  ].map((stat, i) => (
+                      <div key={i} className="text-center space-y-1">
+                          <p className="text-3xl font-black text-primary-600">{stat.val}</p>
+                          <p className="text-sm text-gray-500 font-bold">{stat.label}</p>
                       </div>
-                      <div>
-                          <h3 className="font-bold text-gray-900">توصيل سريع</h3>
-                          <p className="text-xs text-gray-500">لجميع مدن المملكة</p>
-                      </div>
-                  </div>
-                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-green-50 transition-colors group">
-                      <div className="w-12 h-12 bg-white text-green-600 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                          <ShieldCheck size={24} />
-                      </div>
-                      <div>
-                          <h3 className="font-bold text-gray-900">دفع آمن 100%</h3>
-                          <p className="text-xs text-gray-500">حماية كاملة للمشتري</p>
-                      </div>
-                  </div>
-                  <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-purple-50 transition-colors group">
-                      <div className="w-12 h-12 bg-white text-purple-600 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                          <Headphones size={24} />
-                      </div>
-                      <div>
-                          <h3 className="font-bold text-gray-900">دعم فني 24/7</h3>
-                          <p className="text-xs text-gray-500">متواجدون لمساعدتك</p>
-                      </div>
-                  </div>
+                  ))}
               </div>
           </div>
       </section>
 
       {/* Categories Grid */}
-      <section className="py-16 container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-black text-gray-900 flex items-center gap-2">
-                <LayoutGrid className="text-primary-600" />
-                تسوق حسب القسم
-            </h2>
+      <section className="py-20 container mx-auto px-4">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+                <h2 className="text-3xl font-black text-gray-900 flex items-center gap-3">
+                    <LayoutGrid className="text-primary-600" size={32} />
+                    تصفح حسب الفئة
+                </h2>
+                <p className="text-gray-500 mt-2">اختر ما يناسبك من بين آلاف الخيارات</p>
+            </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
               {Object.entries(CATEGORIES).map(([key, cat]) => (
-                  <Link key={key} to={`/category/${key}`} className="group relative overflow-hidden rounded-2xl bg-white border border-gray-100 hover:border-primary-200 shadow-sm hover:shadow-md transition-all aspect-square flex flex-col items-center justify-center p-4">
-                      <div className={`p-4 rounded-full mb-4 bg-gray-50 group-hover:scale-110 transition-transform duration-300 ${cat.color}`}>
-                          <cat.icon size={32} />
+                  <Link key={key} to={`/category/${key}`} className="group p-6 rounded-3xl bg-white border border-gray-100 hover:border-primary-200 shadow-sm hover:shadow-xl transition-all text-center">
+                      <div className={`w-16 h-16 rounded-2xl mb-4 mx-auto flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${cat.color} bg-opacity-10`}>
+                          <cat.icon size={28} />
                       </div>
-                      <span className="font-bold text-gray-800 group-hover:text-primary-600 transition-colors">{cat.name}</span>
+                      <span className="font-bold text-gray-800 text-sm">{cat.name}</span>
                   </Link>
               ))}
           </div>
       </section>
 
       {/* Featured Products */}
-      <section className="bg-primary-50 py-16">
+      <section className="bg-gray-50 py-20">
             <div className="container mx-auto px-4">
-              <div className="flex items-center justify-between mb-10">
+              <div className="flex items-end justify-between mb-12">
                   <div>
-                    <h2 className="text-3xl font-black text-gray-900 mb-2">عروض مختارة</h2>
-                    <p className="text-gray-500">أفضل الصفقات لهذا الأسبوع</p>
+                    <h2 className="text-3xl font-black text-gray-900">أقوى العروض الحالية</h2>
+                    <p className="text-gray-500 mt-2">منتجات مختارة بعناية لأجلك</p>
                   </div>
-                  <Link to="/category/deals" className="text-sm font-bold text-primary-600 hover:bg-white hover:shadow-sm px-4 py-2 rounded-lg transition-all">
-                    عرض الكل
+                  <Link to="/category/deals" className="group flex items-center gap-2 font-black text-primary-600">
+                    مشاهدة الجميع
+                    <ArrowRight size={20} className="group-hover:translate-x-[-4px] transition-transform" />
                   </Link>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                   {featuredProducts.map(product => (
                       <ProductCard key={product.id} product={product} />
                   ))}
@@ -120,38 +158,46 @@ export const HomePage: React.FC = () => {
             </div>
       </section>
 
+      {/* AI Assistant Banner */}
+      <section className="container mx-auto px-4 py-20">
+          <div className="bg-gradient-to-br from-primary-900 to-indigo-900 rounded-[3rem] p-12 lg:p-20 relative overflow-hidden text-white shadow-3xl">
+              <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+                  <div className="space-y-8 text-center lg:text-right">
+                      <div className="inline-block bg-white/10 px-6 py-2 rounded-full border border-white/20 text-sm font-bold">
+                          مدعوم بذكاء Gemini Live 2.5
+                      </div>
+                      <h2 className="text-4xl lg:text-6xl font-black leading-tight">
+                          تحدث مع سوق الجمعة <br/>
+                          <span className="text-secondary-400">مباشرة عبر الصوت!</span>
+                      </h2>
+                      <p className="text-primary-100 text-lg lg:text-xl opacity-80 leading-relaxed">
+                          أول متجر إلكتروني في الشرق الأوسط يتيح لك البحث، المقارنة، والشراء باستخدام صوتك فقط. جربه الآن من الزر العائم بالأسفل.
+                      </p>
+                      <button onClick={() => (window as any).startGeminiVoice?.()} className="bg-white text-primary-900 font-black py-5 px-12 rounded-2xl shadow-xl hover:scale-105 transition-transform inline-flex items-center gap-3">
+                          ابدأ المحادثة الآن
+                      </button>
+                  </div>
+                  <div className="relative flex justify-center">
+                      <div className="w-64 h-64 lg:w-96 lg:h-96 bg-primary-500/20 rounded-full animate-pulse flex items-center justify-center border border-white/10">
+                          <div className="w-48 h-48 lg:w-72 lg:h-72 bg-primary-400/30 rounded-full animate-ping absolute"></div>
+                          <Headphones size={120} className="text-white relative z-10" />
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
+
       {/* New Arrivals */}
-      <section className="container mx-auto px-4 py-16">
-            <div className="flex items-center gap-2 mb-10">
-               <div className="w-1.5 h-8 bg-secondary-500 rounded-full"></div>
-               <h2 className="text-2xl font-black text-gray-900">وصل حديثاً</h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="container mx-auto px-4 pb-20">
+            <h2 className="text-3xl font-black text-gray-900 mb-12 flex items-center gap-3">
+                <Tag size={32} className="text-secondary-500" />
+                وصل حديثاً للمتجر
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {newArrivals.map(product => (
                   <ProductCard key={product.id} product={product} />
               ))}
             </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="container mx-auto px-4 mb-16">
-          <div className="bg-gray-900 rounded-3xl p-10 md:p-16 text-center md:text-right relative overflow-hidden shadow-2xl">
-              <div className="relative z-10 max-w-2xl">
-                  <h2 className="text-3xl md:text-4xl font-black text-white mb-4">هل لديك منتجات تريد بيعها؟</h2>
-                  <p className="text-gray-400 text-lg mb-8">
-                      افتح متجرك الخاص على سوق الجمعة مجاناً وابدأ في الوصول لملايين العملاء.
-                  </p>
-                  <Link to="/dashboard" className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition shadow-xl">
-                      <Tag size={20} />
-                      ابدأ البيع الآن
-                  </Link>
-              </div>
-              {/* Decorative */}
-              <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-l from-primary-900/50 to-transparent pointer-events-none"></div>
-              <div className="hidden md:block absolute left-10 top-1/2 -translate-y-1/2 opacity-20">
-                  <Sparkles size={200} className="text-white" />
-              </div>
-          </div>
       </section>
     </main>
   );
