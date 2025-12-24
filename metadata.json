@@ -1,7 +1,9 @@
 {
-  "name": "Copy of Souq Al-Juma",
-  "description": "A comprehensive e-commerce and classifieds platform with Gemini Live AI voice assistance.",
+  "name": "سوق الجمعة - Souq Al-Juma",
+  "description": "المنصة المتكاملة للتجارة الرقمية المدعومة بـ Gemini AI و PARON GROUP.",
   "requestFramePermissions": [
-    "microphone"
+    "microphone",
+    "camera",
+    "geolocation"
   ]
 }
