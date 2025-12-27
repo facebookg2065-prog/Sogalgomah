@@ -1,6 +1,7 @@
 
 import React, { Suspense, useEffect } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { Header } from './components/Header';
 import { VoiceAssistant } from './components/VoiceAssistant';
 import { BottomNav } from './components/BottomNav';
@@ -50,6 +51,8 @@ function App() {
                 <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+
+          <Analytics />
 
           <footer className="bg-gray-900 text-gray-400 py-16 mt-auto border-t border-gray-800">
               <div className="container mx-auto px-4">
