@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { X, Phone, MessageCircle, Send } from 'lucide-react';
+import { X, Phone, MessageCircle, Send, MessageSquare } from 'lucide-react';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -7,6 +8,7 @@ interface ContactModalProps {
   sellerName: string;
   sellerPhone?: string;
   sellerWhatsapp?: string;
+  sellerTelegram?: string;
   productTitle: string;
 }
 
@@ -16,6 +18,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({
   sellerName,
   sellerPhone,
   sellerWhatsapp,
+  sellerTelegram,
   productTitle,
 }) => {
   if (!isOpen) return null;
@@ -72,13 +75,13 @@ export const ContactModal: React.FC<ContactModalProps> = ({
 
                 {sellerWhatsapp && (
                     <a 
-                        href={`https://wa.me/${sellerWhatsapp.replace(/\+/g, '')}`}
+                        href={`https://wa.me/${sellerWhatsapp.replace(/\+/g, '').replace(/\s/g, '')}?text=${encodeURIComponent(`مرحباً ${sellerName}، أنا مهتم بمنتج "${productTitle}" المعروض في سوق الجمعة.`)}`}
                         target="_blank"
                         rel="noreferrer"
                         className="flex items-center justify-between w-full p-4 rounded-xl border border-gray-200 hover:border-green-500 hover:bg-green-50 transition-all group"
                     >
                         <div className="flex items-center gap-3">
-                            <div className="bg-green-100 text-green-600 p-2 rounded-lg group-hover:bg-green-600 group-hover:text-white transition-colors">
+                            <div className="bg-green-100 text-green-600 p-2 rounded-lg group-hover:bg-[#25D366] group-hover:text-white transition-colors">
                                 <MessageCircle size={20} />
                             </div>
                             <div className="text-right">
@@ -87,6 +90,26 @@ export const ContactModal: React.FC<ContactModalProps> = ({
                             </div>
                         </div>
                         <span className="text-green-600 font-medium text-sm">راسلنا</span>
+                    </a>
+                )}
+
+                {sellerTelegram && (
+                    <a 
+                        href={`https://t.me/${sellerTelegram.replace('@', '')}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center justify-between w-full p-4 rounded-xl border border-gray-200 hover:border-[#0088cc] hover:bg-blue-50 transition-all group"
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className="bg-[#0088cc1a] text-[#0088cc] p-2 rounded-lg group-hover:bg-[#0088cc] group-hover:text-white transition-colors">
+                                <MessageSquare size={20} />
+                            </div>
+                            <div className="text-right">
+                                <span className="block font-bold text-gray-800">تلجرام</span>
+                                <span className="text-xs text-gray-500">مراسلة سريعة</span>
+                            </div>
+                        </div>
+                        <span className="text-[#0088cc] font-medium text-sm">تواصل</span>
                     </a>
                 )}
 

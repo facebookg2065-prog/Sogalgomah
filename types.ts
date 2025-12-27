@@ -1,3 +1,4 @@
+
 export interface User {
   id: string;
   name: string;
@@ -26,6 +27,7 @@ export interface Product {
   location?: string;
   sellerPhone?: string;
   sellerWhatsapp?: string;
+  sellerTelegram?: string; // New field for Telegram handle
   description?: string;
   condition?: 'new' | 'used';
   createdAt?: string;
