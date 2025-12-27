@@ -1,6 +1,7 @@
 
 import React, { Suspense, useEffect } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Header } from './components/Header';
 import { VoiceAssistant } from './components/VoiceAssistant';
 import { BottomNav } from './components/BottomNav';
@@ -34,6 +35,7 @@ function App() {
     <AuthProvider>
       <ShopProvider>
         <div className="min-h-screen flex flex-col font-sans bg-gray-50 selection:bg-primary-100 selection:text-primary-900 pb-20 lg:pb-0">
+          <SpeedInsights />
           <Header />
           
           <Suspense fallback={<PageLoader />}>
