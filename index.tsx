@@ -2,7 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { HashRouter } from 'react-router-dom';
+import { injectSpeedInsights } from '@vercel/speed-insights';
 import './index.css';
+
+// Inject Vercel Speed Insights for performance monitoring
+injectSpeedInsights();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
