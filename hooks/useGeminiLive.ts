@@ -20,26 +20,39 @@ export const useGeminiLive = () => {
   const stop = useCallback(() => {
     setIsActive(false);
     setIsSpeaking(false);
-    if (mediaStreamRef.current) mediaStreamRef.current.getTracks().forEach(track => track.stop());
-    if (scriptProcessorRef.current) scriptProcessorRef.current.disconnect();
+    
+    if (scriptProcessorRef.current) {
+      scriptProcessorRef.current.onaudioprocess = null;
+      scriptProcessorRef.current.disconnect();
+    }
+    
     if (sourceRef.current) sourceRef.current.disconnect();
-    sourcesRef.current.forEach(source => { try { source.stop(); } catch(e){} });
+    
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach(track => track.stop());
+    }
+
+    sourcesRef.current.forEach(source => { 
+      try { source.stop(); } catch(e){} 
+    });
     sourcesRef.current.clear();
+
     if (inputAudioContextRef.current) inputAudioContextRef.current.close();
     if (outputAudioContextRef.current) outputAudioContextRef.current.close();
+    
     sessionPromiseRef.current = null;
+    nextStartTimeRef.current = 0;
   }, []);
 
   const start = useCallback(async () => {
-    // التأكد من اختيار مفتاح API في حال استخدام ميزات متقدمة
+    // Check for API Key selection if in AI Studio environment
     if (window.aistudio && !(await window.aistudio.hasSelectedApiKey())) {
       await window.aistudio.openSelectKey();
-      // ملاحظة: بعد الاستدعاء نفترض النجاح حسب القواعد
     }
 
     const apiKey = process.env.API_KEY;
-    if (!apiKey && !window.aistudio) {
-      setError("الرجاء إعداد مفتاح API_KEY في إعدادات Vercel");
+    if (!apiKey) {
+      setError("الرجاء إعداد مفتاح API_KEY في إعدادات البيئة");
       return;
     }
 
@@ -53,8 +66,7 @@ export const useGeminiLive = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaStreamRef.current = stream;
 
-      // إنشاء مثيل جديد دائماً قبل الاتصال لضمان تحديث المفتاح من Vercel/AI Studio
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey: apiKey });
       
       const sessionPromise = ai.live.connect({
         model: 'gemini-2.5-flash-native-audio-preview-09-2025',
@@ -65,11 +77,16 @@ export const useGeminiLive = () => {
             sourceRef.current = source;
             const scriptProcessor = inputAudioContextRef.current.createScriptProcessor(4096, 1, 1);
             scriptProcessorRef.current = scriptProcessor;
+            
             scriptProcessor.onaudioprocess = (e) => {
               const inputData = e.inputBuffer.getChannelData(0);
               const pcmBlob = createBlob(inputData);
-              sessionPromise.then((session: any) => session.sendRealtimeInput({ media: pcmBlob }));
+              // CRITICAL: initiate sendRealtimeInput after live.connect call resolves
+              sessionPromise.then((session: any) => {
+                session.sendRealtimeInput({ media: pcmBlob });
+              });
             };
+            
             source.connect(scriptProcessor);
             scriptProcessor.connect(inputAudioContextRef.current.destination);
           },
@@ -78,19 +95,25 @@ export const useGeminiLive = () => {
              if (base64Audio && outputAudioContextRef.current) {
                 setIsSpeaking(true);
                 const ctx = outputAudioContextRef.current;
+                
+                // Track start time for gapless playback
                 nextStartTimeRef.current = Math.max(nextStartTimeRef.current, ctx.currentTime);
+                
                 const audioBuffer = await decodeAudioData(decodeBase64ToUint8Array(base64Audio), ctx, 24000, 1);
                 const source = ctx.createBufferSource();
                 source.buffer = audioBuffer;
                 source.connect(ctx.destination);
+                
                 source.onended = () => {
                     sourcesRef.current.delete(source);
                     if (sourcesRef.current.size === 0) setIsSpeaking(false);
                 };
+                
                 source.start(nextStartTimeRef.current);
                 nextStartTimeRef.current += audioBuffer.duration;
                 sourcesRef.current.add(source);
              }
+             
              if (message.serverContent?.interrupted) {
                 sourcesRef.current.forEach(s => { try { s.stop(); } catch(e){} });
                 sourcesRef.current.clear();
@@ -100,18 +123,18 @@ export const useGeminiLive = () => {
           },
           onclose: () => stop(),
           onerror: (e) => {
-            console.error(e);
+            console.error("Live API Error:", e);
             if (e.message?.includes("Requested entity was not found")) {
                 window.aistudio?.openSelectKey();
             }
-            setError("حدث خطأ في الاتصال");
+            setError("انقطع الاتصال بالمساعد الذكي");
             stop();
           }
         },
         config: {
             responseModalities: [Modality.AUDIO],
-            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } } },
-            systemInstruction: "أنت مساعد ذكي لسوق الجمعة، مدعوم بواسطة PARON GROUP. ساعد المستخدمين في تصفح الموقع باللغة العربية."
+            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } } },
+            systemInstruction: "أنت المساعد الصوتي الرسمي لـ 'سوق الجمعة' إصدار 2026. تساعد المستخدمين في العثور على المنتجات ومقارنة الأسعار بأسلوب مهذب واحترافي وباللغة العربية الفصحى أو العامية السعودية حسب رغبة المستخدم. أنت تتبع لـ PARON GROUP."
         }
       });
       sessionPromiseRef.current = sessionPromise;

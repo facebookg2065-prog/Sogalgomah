@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react';
+// Fix: Use standard react-router-dom imports
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, Loader2, AlertCircle } from 'lucide-react';

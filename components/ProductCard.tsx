@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { Product } from '../types';
 import { ShoppingCart, Heart, Eye, Check, MapPin } from 'lucide-react';
+// Fix: Use standard useNavigate import from react-router-dom
 import { useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 

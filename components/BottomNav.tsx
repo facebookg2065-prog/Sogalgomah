@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Home, Grid, ShoppingCart, User, PlusSquare } from 'lucide-react';
+// Fix: Use standard react-router-dom imports
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 
@@ -19,7 +20,8 @@ export const BottomNav: React.FC = () => {
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 px-8 py-4 flex items-center justify-between z-50 pb-safe shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)]">
       <Link to="/" className={`flex flex-col items-center gap-1.5 transition-all ${isActive('/') ? 'text-primary-600 scale-110' : 'text-gray-400 hover:text-gray-600'}`}>
-        <Home size={22} variant={isActive('/') ? "bold" : "outline"} />
+        {/* Fix: Lucide icons do not have a "variant" prop. Rely on className for styling. */}
+        <Home size={22} className={isActive('/') ? "stroke-[2.5px]" : "stroke-[2px]"} />
         <span className="text-[10px] font-black">الرئيسية</span>
       </Link>
       

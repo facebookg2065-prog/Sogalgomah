@@ -1,19 +1,19 @@
 
 import React, { useState } from 'react';
+// Fix: Use standard react-router-dom imports
 import { useParams, Link } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { ProductCard } from '../components/ProductCard';
-import { Share2, Heart, MapPin, Phone, ShieldCheck, ShoppingCart, Check, Clock, MessageCircle, MessageSquare } from 'lucide-react';
+import { MapPin, Phone, ShieldCheck, ShoppingCart, Check, Clock, MessageCircle, MessageSquare } from 'lucide-react';
 import { ContactModal } from '../components/ContactModal';
 
 export const ProductDetails: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const { products, addToCart, cart, wishlist, toggleWishlist } = useShop();
+  const { products, addToCart, cart, wishlist } = useShop();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   
   const product = products.find(p => p.id === productId);
   const isInCart = cart.some(item => item.id === productId);
-  const isWishlisted = productId ? wishlist.includes(productId) : false;
 
   if (!product) {
     return (

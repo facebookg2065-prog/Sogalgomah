@@ -1,11 +1,12 @@
 
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
+// Fix: Use standard react-router-dom imports
 import { Routes, Route, Link } from 'react-router-dom';
 import { Header } from './components/Header';
 import { VoiceAssistant } from './components/VoiceAssistant';
 import { BottomNav } from './components/BottomNav';
 import { AuthProvider } from './context/AuthContext';
-import { ShopProvider, useShop } from './context/ShopContext';
+import { ShopProvider } from './context/ShopContext';
 import { ShoppingBag } from 'lucide-react';
 
 const HomePage = React.lazy(() => import('./pages/HomePage').then(module => ({ default: module.HomePage })));

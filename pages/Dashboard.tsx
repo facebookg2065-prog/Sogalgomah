@@ -1,7 +1,9 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useShop } from '../context/ShopContext';
-import { BarChart3, Eye, Package, TrendingUp, LogOut, PlusCircle, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Eye, Package, LogOut, PlusCircle, ShieldCheck } from 'lucide-react';
+// Fix: Use standard Link import from react-router-dom
 import { Link } from 'react-router-dom';
 import { AddAdModal } from '../components/AddAdModal';
 

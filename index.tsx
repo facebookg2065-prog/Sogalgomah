@@ -1,6 +1,8 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+// Fix: Use standard HashRouter import from react-router-dom
 import { HashRouter } from 'react-router-dom';
 import './index.css';
 

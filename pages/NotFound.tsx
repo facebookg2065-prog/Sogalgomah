@@ -1,4 +1,6 @@
+
 import React from 'react';
+// Fix: Use standard Link import from react-router-dom
 import { Link } from 'react-router-dom';
 import { Ghost, Home } from 'lucide-react';
 

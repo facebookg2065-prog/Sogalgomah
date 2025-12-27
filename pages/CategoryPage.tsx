@@ -1,8 +1,10 @@
+
 import React from 'react';
+// Fix: Use standard react-router-dom imports
 import { useParams, Link } from 'react-router-dom';
 import { ProductCard } from '../components/ProductCard';
 import { CATEGORIES, ALL_PRODUCTS } from '../data/mockData';
-import { ArrowRight, Filter, LayoutGrid } from 'lucide-react';
+import { Filter, LayoutGrid } from 'lucide-react';
 
 export const CategoryPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();

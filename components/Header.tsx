@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, ShoppingCart, Menu, User as UserIcon, X, Home, Grid, Heart, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useShop } from '../context/ShopContext';
+// Fix: Use standard react-router-dom imports
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { CATEGORIES } from '../data/mockData';
 import { CartDrawer } from './CartDrawer';
