@@ -1,12 +1,16 @@
 
 import React, { Suspense, useEffect } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { injectSpeedInsights } from '@vercel/speed-insights';
 import { Header } from './components/Header';
 import { VoiceAssistant } from './components/VoiceAssistant';
 import { BottomNav } from './components/BottomNav';
 import { AuthProvider } from './context/AuthContext';
 import { ShopProvider, useShop } from './context/ShopContext';
 import { ShoppingBag } from 'lucide-react';
+
+// Initialize Vercel Speed Insights
+injectSpeedInsights();
 
 const HomePage = React.lazy(() => import('./pages/HomePage').then(module => ({ default: module.HomePage })));
 const Dashboard = React.lazy(() => import('./pages/Dashboard').then(module => ({ default: module.Dashboard })));
