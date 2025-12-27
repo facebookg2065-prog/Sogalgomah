@@ -1,6 +1,7 @@
 
 import React, { Suspense, useEffect } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { Header } from './components/Header';
 import { VoiceAssistant } from './components/VoiceAssistant';
 import { BottomNav } from './components/BottomNav';
@@ -99,6 +100,7 @@ function App() {
 
           <BottomNav />
           <VoiceAssistant />
+          <Analytics />
         </div>
       </ShopProvider>
     </AuthProvider>
