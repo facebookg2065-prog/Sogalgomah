@@ -81,7 +81,6 @@ export const useGeminiLive = () => {
             scriptProcessor.onaudioprocess = (e) => {
               const inputData = e.inputBuffer.getChannelData(0);
               const pcmBlob = createBlob(inputData);
-              // CRITICAL: initiate sendRealtimeInput after live.connect call resolves
               sessionPromise.then((session: any) => {
                 session.sendRealtimeInput({ media: pcmBlob });
               });
@@ -95,25 +94,19 @@ export const useGeminiLive = () => {
              if (base64Audio && outputAudioContextRef.current) {
                 setIsSpeaking(true);
                 const ctx = outputAudioContextRef.current;
-                
-                // Track start time for gapless playback
                 nextStartTimeRef.current = Math.max(nextStartTimeRef.current, ctx.currentTime);
-                
                 const audioBuffer = await decodeAudioData(decodeBase64ToUint8Array(base64Audio), ctx, 24000, 1);
                 const source = ctx.createBufferSource();
                 source.buffer = audioBuffer;
                 source.connect(ctx.destination);
-                
                 source.onended = () => {
                     sourcesRef.current.delete(source);
                     if (sourcesRef.current.size === 0) setIsSpeaking(false);
                 };
-                
                 source.start(nextStartTimeRef.current);
                 nextStartTimeRef.current += audioBuffer.duration;
                 sourcesRef.current.add(source);
              }
-             
              if (message.serverContent?.interrupted) {
                 sourcesRef.current.forEach(s => { try { s.stop(); } catch(e){} });
                 sourcesRef.current.clear();
@@ -122,7 +115,7 @@ export const useGeminiLive = () => {
              }
           },
           onclose: () => stop(),
-          onerror: (e) => {
+          onerror: (e: any) => {
             console.error("Live API Error:", e);
             if (e.message?.includes("Requested entity was not found")) {
                 window.aistudio?.openSelectKey();
@@ -134,7 +127,10 @@ export const useGeminiLive = () => {
         config: {
             responseModalities: [Modality.AUDIO],
             speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } } },
-            systemInstruction: "أنت المساعد الصوتي الرسمي لـ 'سوق الجمعة' إصدار 2026. تساعد المستخدمين في العثور على المنتجات ومقارنة الأسعار بأسلوب مهذب واحترافي وباللغة العربية الفصحى أو العامية السعودية حسب رغبة المستخدم. أنت تتبع لـ PARON GROUP."
+            // TS Fix: Using parts array to satisfy Content type if string fails
+            systemInstruction: {
+              parts: [{ text: "أنت المساعد الصوتي الرسمي لـ 'سوق الجمعة' إصدار 2026. تساعد المستخدمين في العثور على المنتجات ومقارنة الأسعار بأسلوب مهذب واحترافي وباللغة العربية الفصحى أو العامية السعودية حسب رغبة المستخدم. أنت تتبع لـ PARON GROUP." }]
+            }
         }
       });
       sessionPromiseRef.current = sessionPromise;
