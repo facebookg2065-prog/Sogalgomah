@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Mic, MicOff, X, MessageCircle, Volume2, Sparkles } from 'lucide-react';
+import { Mic, MicOff, X, MessageCircle, Volume2, Sparkles, Zap } from 'lucide-react';
 import { useGeminiLive } from '../hooks/useGeminiLive';
 
 export const VoiceAssistant: React.FC = () => {
@@ -13,10 +13,8 @@ export const VoiceAssistant: React.FC = () => {
         setHasKey(true);
     }
     
-    // مستمع لفتح المساعد من أي مكان في الموقع
     const handleOpenAI = () => {
         setIsOpen(true);
-        // تأخير بسيط لضمان فتح القائمة قبل بدء الميكروفون
         setTimeout(() => start(), 500);
     };
 
@@ -45,90 +43,93 @@ export const VoiceAssistant: React.FC = () => {
 
   return (
     <>
-        {/* Floating Action Button */}
         <button 
             onClick={handleToggle}
-            className={`fixed bottom-24 lg:bottom-8 left-6 z-50 rounded-2xl p-4 shadow-2xl transition-all duration-500 transform hover:scale-110 flex items-center justify-center gap-2 group ${
-                isOpen ? 'bg-red-500 rotate-90 scale-90' : 'bg-gradient-to-br from-primary-600 via-indigo-600 to-purple-700'
+            className={`fixed bottom-24 lg:bottom-8 left-6 z-50 rounded-full p-5 shadow-[0_10px_40px_-10px_rgba(79,70,229,0.5)] transition-all duration-500 transform hover:scale-110 flex items-center justify-center group ${
+                isOpen ? 'bg-red-500 rotate-90 scale-90' : 'bg-gradient-to-br from-indigo-600 to-primary-700'
             } text-white`}
             aria-label="Voice Assistant"
         >
             {isOpen ? <X size={24} /> : (
                 <>
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white animate-pulse"></div>
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-secondary-400 rounded-full border-2 border-white animate-pulse flex items-center justify-center text-[8px] font-black text-white">AI</div>
                     <MessageCircle size={28} className="group-hover:rotate-12 transition-transform" />
-                    <span className="hidden lg:inline font-bold text-sm px-1">مساعد 2026</span>
                 </>
             )}
         </button>
 
-        {/* Assistant Panel */}
         {isOpen && (
-            <div className="fixed bottom-44 lg:bottom-28 left-6 z-50 w-[340px] bg-white rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-gray-100 overflow-hidden flex flex-col animate-fade-in-up">
-                {/* Header */}
-                <div className="bg-[#0a0a0b] p-6 text-white relative">
+            <div className="fixed bottom-44 lg:bottom-28 left-6 z-50 w-[360px] bg-white/80 backdrop-blur-2xl rounded-[3rem] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.3)] border border-white/50 overflow-hidden flex flex-col animate-fade-in-up">
+                <div className="bg-gray-950 p-6 text-white relative">
                     <div className="flex items-center gap-3">
-                        <div className="bg-primary-500/20 p-2 rounded-2xl border border-primary-500/30">
-                            <Sparkles size={20} className="text-primary-400 animate-spin-slow" />
+                        <div className="bg-primary-500/20 p-2.5 rounded-2xl border border-primary-500/40">
+                            <Sparkles size={20} className="text-primary-400 animate-pulse" />
                         </div>
                         <div>
-                            <h3 className="font-black text-sm tracking-tight">Souq Al-Juma AI</h3>
-                            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Powered by Gemini 2.5</p>
+                            <h3 className="font-black text-sm tracking-tight flex items-center gap-2">
+                                Souq Al-Juma AI 2026
+                                <span className="bg-green-500 w-1.5 h-1.5 rounded-full animate-pulse"></span>
+                            </h3>
+                            <p className="text-[9px] text-gray-500 uppercase font-black tracking-widest">Powered by Gemini 2.5 Live</p>
                         </div>
                     </div>
                 </div>
 
-                {/* Body */}
-                <div className="p-8 flex flex-col items-center justify-center gap-8 min-h-[280px] bg-gradient-to-b from-gray-50 to-white relative">
-                    
-                    {/* Visualizer */}
+                <div className="p-10 flex flex-col items-center justify-center gap-10 min-h-[300px] relative">
                     <div className="relative">
                         {isActive && (
-                            <div className="absolute -inset-8 rounded-full bg-primary-500/10 animate-ping"></div>
+                            <div className="absolute -inset-10 rounded-full bg-primary-500/20 animate-ping"></div>
                         )}
                         {isSpeaking && (
-                             <div className="absolute -inset-12 rounded-full bg-purple-500/10 animate-pulse"></div>
+                             <div className="absolute -inset-14 rounded-full bg-secondary-500/10 animate-pulse"></div>
                         )}
                         
                         <button 
                             onClick={handleMicClick}
-                            className={`relative z-10 w-24 h-24 rounded-[2rem] flex items-center justify-center transition-all duration-500 shadow-2xl transform active:scale-95 ${
+                            className={`relative z-10 w-28 h-28 rounded-full flex items-center justify-center transition-all duration-700 shadow-2xl transform active:scale-90 ${
                                 isActive 
-                                    ? 'bg-red-500 text-white shadow-red-500/40 rotate-180' 
-                                    : 'bg-white text-primary-600 hover:bg-primary-50 border border-gray-100'
+                                    ? 'bg-red-500 text-white shadow-red-500/40' 
+                                    : 'bg-white text-primary-600 hover:bg-gray-50 border-4 border-primary-50'
                             }`}
                         >
-                            {isActive ? <MicOff size={36} /> : <Mic size={36} />}
+                            {isActive ? <MicOff size={40} /> : <Mic size={40} />}
                         </button>
                     </div>
 
-                    <div className="text-center space-y-3">
-                        <h4 className="font-black text-xl text-gray-900 tracking-tight">
+                    <div className="text-center space-y-4">
+                        <h4 className="font-black text-2xl text-gray-900 tracking-tight">
                             {isActive ? (isSpeaking ? "أنا أتحدث..." : "أنا أسمعك جيداً") : "تحدث معي الآن"}
                         </h4>
-                        <p className="text-sm text-gray-500 px-4 leading-relaxed font-medium">
+                        <div className="flex justify-center gap-1 h-4 items-center">
+                            {isActive && [1, 2, 3, 4, 5].map(i => (
+                                <div key={i} className="w-1 bg-primary-500 rounded-full animate-bounce" style={{ height: `${Math.random() * 100 + 20}%`, animationDelay: `${i * 0.1}s` }}></div>
+                            ))}
+                        </div>
+                        <p className="text-sm text-gray-500 px-6 leading-relaxed font-medium">
                             {isActive 
-                                ? "أخبرني عما تبحث عنه في سوق الجمعة وسأجد لك أفضل الصفقات." 
-                                : "جرب: 'ابحث لي عن سيارة مرسيدس بسعر أقل من 200 ألف'"}
+                                ? "أخبرني عما تبحث عنه وسأجده لك فوراً." 
+                                : "اضغط على الميكروفون للبدء بالبحث الصوتي الذكي."}
                         </p>
                     </div>
                     
                     {error && (
-                        <div className="absolute bottom-4 w-full px-6">
-                             <div className="text-[10px] font-bold text-red-500 bg-red-50 px-3 py-2 rounded-xl border border-red-100 text-center animate-shake">
+                        <div className="absolute bottom-4 inset-x-6">
+                             <div className="text-[10px] font-bold text-red-500 bg-red-50 px-4 py-3 rounded-2xl border border-red-100 text-center animate-shake">
                                  {error}
                              </div>
                         </div>
                     )}
                 </div>
                 
-                {/* Footer */}
-                <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-100">
-                    <span className="text-[10px] font-black text-gray-400 uppercase">Secure AI Link</span>
-                    <div className="flex gap-1">
-                        {[1, 2, 3].map(i => (
-                            <div key={i} className={`w-1 h-1 rounded-full ${isActive ? 'bg-primary-500 animate-bounce' : 'bg-gray-300'}`} style={{ animationDelay: `${i * 0.1}s` }}></div>
-                        ))}
+                <div className="bg-gray-50/80 px-8 py-5 flex items-center justify-between border-t border-gray-100">
+                    <div className="flex items-center gap-2">
+                        <Zap size={12} className="text-secondary-500" />
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Ultra Low Latency</span>
+                    </div>
+                    <div className="flex gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+                        <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]"></div>
+                        <div className="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]"></div>
                     </div>
                 </div>
             </div>
